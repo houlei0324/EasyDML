@@ -15,10 +15,10 @@ Here we rewrite three function to achieve easy distribute programming
 
 FLAGS = gflags.FLAGS
 
-gflags.DEFINE_string('dataset', '.\data\iris.csv', 'the input dataset')
-gflags.DEFINE_integer('k', 5, 'the number of clusters')
+gflags.DEFINE_string('dataset', '.\data\iris_norm.csv', 'the input dataset')
+gflags.DEFINE_integer('k', 3, 'the number of clusters')
 gflags.DEFINE_integer('max_iteration', 100, 'the max iteration to run')
-gflags.DEFINE_float('tolerance', 1.0, 'the tolerance to stop')
+gflags.DEFINE_float('tolerance', 0.0, 'the tolerance to stop')
 
 class Kmeans(MachineLearning):
     # the constructor of your algorithm
@@ -32,17 +32,17 @@ class Kmeans(MachineLearning):
         self.loss = 0
         self.max_iteration = iteration
         self.tolerance = tolerance
+        self.centers = []
 
     # Coordinater
     # Init the centers of k cluster and send them to each worker
     def initEval(self):
         if self.comm_rank == 0:
-            self.centers = 2 * np.random([self.k, self.data_dim]) - 1
+            self.centers = np.random.rand(self.k, self.data_dim)
         else:
-            self.lable = np.ones((1, self.data_size))
+            self.lable = np.ones((self.data_size, 1))
             self.new_centers = np.zeros((self.k, self.data_dim))
-        #=========================================
-        self.deliverer.message_bcast(self.centers)
+        self.centers = self.deliverer.message_bcast(self.centers)
 
     def iterEval(self):
         if self.comm_rank == 0:
@@ -56,17 +56,21 @@ class Kmeans(MachineLearning):
                 self.loss += tmp_recv[1]
             self.centers = new_centers / self.data_size
             self.superstep += 1
+            self.logger.info('Loss: '+str(self.loss))
             # to decide whether to finish iteration
-            if (self.superstep == self.max_iteration) or (self.loss - last_loss
-                                < self.tolerance):
+            if (self.superstep == self.max_iteration) or (abs(self.loss -
+                                            last_loss) < self.tolerance):
                 self.iter_finished = True
         else:
             loss = 0.0
             i = 0
+            self.new_centers = np.zeros((self.k, self.data_dim))
             for vec in self.data:
-                dist = np.array([])
+                dist = []
                 for center in self.centers:
-                    dist.append(np.sqrt(np.sum(np.square(vec - center))))
+                    dist.append(np.linalg.norm(vec - center))
+                dist = np.array(dist)
+                #self.logger.info('\n'+str(dist))
                 self.lable[i] = np.argmin(dist)
                 self.new_centers[np.argmin(dist)] += vec
                 loss += np.min(dist)
@@ -77,9 +81,9 @@ class Kmeans(MachineLearning):
             self.deliverer.message_send(message, 0)
         #========================================
         self.comm.barrier()
-        self.deliverer.message_bcast(self.centers)
-        self.deliverer.message_bcast(self.superstep)
-        self.deliverer.message_bcast(self.iter_finished)
+        self.centers = self.deliverer.message_bcast(self.centers)
+        self.superstep = self.deliverer.message_bcast(self.superstep)
+        self.iter_finished = self.deliverer.message_bcast(self.iter_finished)
 
     def AssumbleEval(self):
         pass

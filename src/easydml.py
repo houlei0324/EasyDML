@@ -56,11 +56,11 @@ class MachineLearning:
                             self.comm_size, datadir)
             self.data_dim = np.shape(self.data)[1]
             self.data_size = np.shape(self.data)[0]
-        tmp_dim = np.mean(self.deliverer.message_gather(self.data_dim)[1:])
+        tmp_dim = self.deliverer.message_gather(self.data_dim)
         tmp_size = self.deliverer.message_reduce_sum(self.data_size)
         self.comm.barrier()
         if self.comm_rank == 0:
-            self.data_dim = tmp_dim
+            self.data_dim = tmp_dim[1]
             self.data_size = tmp_size
             self.load_time = time.time() - self.load_time
             self.logger.info('[EasyDML] Finished loading data.')
@@ -81,32 +81,33 @@ class MachineLearning:
             self.logger.info('[EasyDML] Run time: ' + str(self.run_time) + 's')
 
     def run(self):
-        if comm_rank == 0:
-            self.run_time = tme.time()
+        if self.comm_rank == 0:
+            self.run_time = time.time()
             #========= InitEval =============
             self.logger.info('[InitEval] Start ...')
-            initEval()
+            self.initEval()
             self.comm.barrier()
             self.logger.info('[InitEval] Finished!')
             #========= IterEval =============
             while self.iter_finished == False:
                 self.logger.info('[IterEval %d] Start ...' %(self.superstep))
-                iterEval()
+                self.iterEval()
                 self.comm.barrier()
-                self.logger.info('[IterEval %d] Finished!' %(self.superstep))
+                self.logger.info('[IterEval %d] Finished!' %(self.superstep - 1))
             #========= AssumbleEval ==========
             self.logger.info('[AssumbleEval] Start ...')
-            assumbleEval()
+            self.assumbleEval()
             self.comm.barrier()
             self.logger.info('[AssumbleEval] Finished!')
-        if comm_rank > 0:
+            self.run_time = time.time() - self.run_time
+        else:
             #========= InitEval =============
-            initEval()
+            self.initEval()
             self.comm.barrier()
             #========= IterEval =============
-            while self.iter_finished == false:
-                iterEval()
+            while self.iter_finished == False:
+                self.iterEval()
                 self.comm.barrier()
             #========= AssumbleEval ==========
-            assumbleEval();
+            self.assumbleEval();
             self.comm.barrier()
