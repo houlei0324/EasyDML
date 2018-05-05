@@ -20,13 +20,13 @@ This is a light python project for programming distributed machine learning algo
 * 
 
 ## Dependence
-We use python to make this project can be deploy on windows, linux and mac, all dependences is listed as follow:
--- python3
--- pip
--- numpy
--- mpi4py
--- python-gflags
--- pytest
+We use python to make this project can be deploy on windows, linux and mac, all dependences is listed as follow:  
+-- python3  
+-- pip  
+-- numpy  
+-- mpi4py  
+-- python-gflags  
+-- pytest  
 You can use pip to install all the packages and easily deploy this project on your cluster or PC.
 
 ## How to Run
