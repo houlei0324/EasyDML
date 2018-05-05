@@ -18,3 +18,16 @@ This is a light python project for programming distributed machine learning algo
 * Easy Programming. You can transform one machine learning algorithm distirbuted easily, which means that you will add as less codes as possible for the parallelization of one current sequential ML algorithm.
 * Well Scalability. We support the increase of data and machines. You can process bigger data using more processors, which means that with the increase in the number of processors, the running time of your algorithm on the same data will decrease, and as long as your cluster is big enough, you can process as big data as you want in acceptable time
 * 
+
+## Dependence
+We use python to make this project can be deploy on windows, linux and mac, all dependences is listed as follow:
+-- python3
+-- pip
+-- numpy
+-- mpi4py
+-- python-gflags
+-- pytest
+You can use pip to install all the packages and easily deploy this project on your cluster or PC.
+
+## How to Run
+See the shell files in scripts
