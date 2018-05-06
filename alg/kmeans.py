@@ -6,7 +6,6 @@ import numpy as np
 import gflags
 
 sys.path.insert(0, sys.path[0]+'/..')
-print (sys.path)
 from src.easydml import MachineLearning
 
 '''
