@@ -32,12 +32,11 @@ You can use pip to install all the packages and easily deploy this project on yo
 ## How to Run
 See the shell files in scripts
 
-
-##path setting for different os
+## Path setting for different os
 You need to change path in run.sh && alg/*.py correspond to different os.  
-In windows, it's suggested to use spliter like "\",  
-   e.g.  run.sh :  mpiexec -n 5 python alg\kmeans.py  
-         kmeans.py : gflags.DEFINE_string('dataset', '.\data\iris_norm.csv', 'the input dataset')  
-In Linux, it's suggested to use spliter like "/",  
-   e.g.  run.sh : mpiexec -n 5 python3 ../alg/kmeans.py  
-         kmeans.py : gflags.DEFINE_string('dataset', '../data/iris_norm.csv', 'the input dataset')  
+* In windows, it's suggested to use spliter like "\", e.g.  
+run.sh :  `mpiexec -n 5 python alg\kmeans.py`  
+kmeans.py : `gflags.DEFINE_string('dataset', '.\data\iris_norm.csv', 'the input dataset')`  
+* In Linux, it's suggested to use spliter like "/", e.g.  
+run.sh : `mpiexec -n 5 python3 ../alg/kmeans.py`  
+kmeans.py : `gflags.DEFINE_string('dataset', '../data/iris_norm.csv', 'the input dataset')`  
