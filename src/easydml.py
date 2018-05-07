@@ -58,7 +58,8 @@ class MachineLearning:
         self.superstep = 0
         self.iter_finished = False
 
-    def loadData(self, datadir):
+
+    def loadData(self, datadir, separator):
         ''' Load training data from given datadir.
 
         Load training data from given datadir, which support laoding from
@@ -66,20 +67,23 @@ class MachineLearning:
 
         Args:
             datadir: the dir of the given dataset.
+            separator: the separator of dataset.
         '''
+
+
         if self.comm_rank == 0:
             self.load_time = time.time()
             self.logger.info('[EasyDML] Start to load data ...')
         else:
             if datadir[:3] == 'http':
                 self.data = self.loader.fromHttp(self.comm_rank,
-                            self.comm_size, datadir)
+                            self.comm_size, datadir, separator)
             elif datadir[:3] == 'hdfs':
                 self.data = self.loader.fromHdfs(self.comm_rank,
-                            self.comm_size, datadir)
+                            self.comm_size, datadir, separator)
             else:
                 self.data = self.loader.fromLocal(self.comm_rank,
-                            self.comm_size, datadir)
+                            self.comm_size, datadir, separator)
             self.data_dim = np.shape(self.data)[1]
             self.data_size = np.shape(self.data)[0]
         tmp_dim = self.deliverer.message_gather(self.data_dim)

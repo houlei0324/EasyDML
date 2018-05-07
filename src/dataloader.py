@@ -21,7 +21,7 @@ class Loader:
         ''' Inits the logger attribute '''
         self.logger = logger
 
-    def fromLocal(self, comm_rank, comm_size, datadir):
+    def fromLocal(self, comm_rank, comm_size, datadir, separator):
         ''' Load data from a local file
 
         Different processors load data from one local file according to th hash
@@ -32,6 +32,7 @@ class Loader:
             comm_size: the size of the MPI communication world
             datadir: the dir of input file
         '''
+
         input = open(datadir)
         num = 0
         load_num = 0
@@ -40,7 +41,7 @@ class Loader:
             # to decide whether this line of data should be loaded
             # according to an samole hash
             if num % (comm_size - 1) == comm_rank - 1:
-                data.append(line.split())
+                data.append(line.split(separator))
                 load_num = load_num + 1
             num = num + 1
         self.logger.info(
@@ -48,7 +49,7 @@ class Loader:
              %(comm_rank, load_num))
         return np.array(data).astype(np.float64)
 
-    def fromHttp(self, comm_rank, comm_size, data, datadir):
+def fromHttp(self, comm_rank, comm_size, data, datadir, separator):
         ''' Load data from http
 
         Different processors load data from one http file according to th hash
@@ -58,10 +59,11 @@ class Loader:
             comm_rank: the id of the processor in MPI communication world
             comm_size: the size of the MPI communication world
             datadir: the dir of input file
+            separator: the separator of data
         '''
         pass
 
-    def fromHdfs(self, comm_rank, comm_size, data, datadir):
+    def fromHdfs(self, comm_rank, comm_size, data, datadir, separator):
         ''' Load data from a hdfs file
 
         Different processors load data from one hdfs file according to th hash
@@ -71,5 +73,6 @@ class Loader:
             comm_rank: the id of the processor in MPI communication world
             comm_size: the size of the MPI communication world
             datadir: the dir of input file
+            separator: the separator of data
         '''
         pass
