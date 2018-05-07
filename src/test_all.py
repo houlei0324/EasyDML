@@ -5,7 +5,7 @@ import pytest
 import edml_log
 
 def testLogger():
-
+    pass
 
 if __name__ == "__main__":
     pytest.main()
