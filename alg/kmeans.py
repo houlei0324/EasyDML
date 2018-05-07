@@ -5,29 +5,42 @@ import sys
 import numpy as np
 import gflags
 
-sys.path.insert(0, sys.path[0]+'/..')
+sys.path.insert(0, sys.path[0]+'\\..')
 from src.easydml import MachineLearning
-
-'''
-K-means algorithm is a basic clustering algorithm.
-Here we rewrite three function to achieve easy distribute programming
-'''
 
 FLAGS = gflags.FLAGS
 
-#gflags.DEFINE_string('dataset', '.\data\iris_norm.csv', 'the input dataset')
-gflags.DEFINE_string('dataset', '../data/iris_norm.csv', 'the input dataset')
+# use gflags to set params
+gflags.DEFINE_string('dataset', '.\data\iris_norm.csv', 'the input dataset')
+#gflags.DEFINE_string('dataset', '../data/iris_norm.csv', 'the input dataset')
 gflags.DEFINE_integer('k', 3, 'the number of clusters')
 gflags.DEFINE_integer('max_iteration', 100, 'the max iteration to run')
 gflags.DEFINE_float('tolerance', 0.0, 'the tolerance to stop')
 
 class Kmeans(MachineLearning):
-    # the constructor of your algorithm
-    # use gflags to set params
-    # k            the number of clusters
-    # iteration    the max iteration to stop
-    # loss         the threshold of loss to stop
+    """ K-means Class inherit form MachineLearning
+
+    K-means algorithm is a basic clustering algorithm.
+    Here we rewrite three function to achieve easy distribute programming
+
+    Attribuets:
+        k: the number of clusters.
+        max_iteration: the max iteration to stop
+        loss: the result value of the object function
+        tolerance: the threshold of loss to stop
+        centers: the centers of clusters
+    """
+
     def __init__(self, k, iteration, tolerance):
+        """ Inits attributes of Kmeans
+
+        The initialization defination of the ML algorithm, args all from gflags.
+
+        Args:
+            k: the number of clusters, given by gflags
+            iteration: the max iteration to stop, given by gflags
+            tolerance: the threshold of loss to stop
+        """
         super(Kmeans, self).__init__()
         self.k = k
         self.loss = 0
@@ -35,9 +48,13 @@ class Kmeans(MachineLearning):
         self.tolerance = tolerance
         self.centers = []
 
-    # Coordinater
-    # Init the centers of k cluster and send them to each worker
     def initEval(self):
+        """ Rewrite initEval for k-means
+
+        Init the centers of k cluster and send them to each worker,
+        users are support to think about what should be done by the
+        coodinator and workers.
+        """
         if self.comm_rank == 0:
             self.centers = np.random.rand(self.k, self.data_dim)
         else:
@@ -46,6 +63,12 @@ class Kmeans(MachineLearning):
         self.centers = self.deliverer.message_bcast(self.centers)
 
     def iterEval(self):
+        """ Rewrite iterEval for k-means
+
+        To design the operations in one loop, the main thinking is
+        to calculate loss function using workers and to update parameters of
+        the model as well as synchronization using the coodinator.
+        """
         if self.comm_rank == 0:
             new_centers = np.zeros((self.k, self.data_dim))
             tmp_recv = []
@@ -86,7 +109,13 @@ class Kmeans(MachineLearning):
         self.superstep = self.deliverer.message_bcast(self.superstep)
         self.iter_finished = self.deliverer.message_bcast(self.iter_finished)
 
-    def AssumbleEval(self):
+    def assumbleEval(self):
+        """ Rewrite assumbleEval for k-means testing
+
+        The results of the centers of clusters have been assumbled,
+        now for a test input, a lable should be given out according to
+        the model.
+        """
         pass
 
 if __name__ == '__main__':
