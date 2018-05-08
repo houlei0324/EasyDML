@@ -3,6 +3,7 @@ __date__ = '04/29/2018'
 
 import re
 import numpy as np
+from io import BytesIO
 import src.edml_log as log
 
 class Loader:
@@ -36,20 +37,21 @@ class Loader:
         input = open(datadir)
         num = 0
         load_num = 0
-        data = []
+        tmp = ''
         for line in input:
             # to decide whether this line of data should be loaded
             # according to an samole hash
             if num % (comm_size - 1) == comm_rank - 1:
-                data.append(line.split(separator))
+                tmp = tmp + line
                 load_num = load_num + 1
             num = num + 1
+        data = np.genfromtxt(BytesIO(tmp.encode('utf8')), dtype=None, delimiter=separator)
         self.logger.info(
             '[Processor %d] loads %d lines of data from the local file.'
              %(comm_rank, load_num))
-        return np.array(data).astype(np.float64)
+        return data
 
-def fromHttp(self, comm_rank, comm_size, data, datadir, separator):
+    def fromHttp(self, comm_rank, comm_size, data, datadir, separator):
         ''' Load data from http
 
         Different processors load data from one http file according to th hash
