@@ -17,7 +17,9 @@ An Easy programming tool for Distributed Machine Learning
 This is a light python project for programming distributed machine learning algorithm easily, there are three key objects we want to achieve:
 * Easy Programming. You can transform one machine learning algorithm distirbuted easily, which means that you will add as less codes as possible for the parallelization of one current sequential ML algorithm.
 * Well Scalability. We support the increase of data and machines. You can process bigger data using more processors, which means that with the increase in the number of processors, the running time of your algorithm on the same data will decrease, and as long as your cluster is big enough, you can process as big data as you want in acceptable time.
-*
+* Support Features of ML. EasyDML aims to provide APIs which support the features of ML algorithms, such as iteration, training and testing, data preprocessing.
+* Fault tolerance and Load Balance. For large datasets, there will be trouble on machines during the running of algorithms on the clusters, so it is important for a distributed system to support fault tolerance and load balance. EasyDML supports using checkpoints to save and recover when something wrong on one of the machines or processors in the cluster. Load balance will be supported by static partition of datasets.  
+For more information about EasyDML please read [wiki](https://github.com/houlei0324/EasyDML/wiki)
 
 ## Dependence
 We use python to make this project can be deploy on windows, linux and mac, all dependences is listed as follow:  
