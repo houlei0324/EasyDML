@@ -2,7 +2,7 @@
 An Easy programming tool for Distributed Machine Learning
 
 ```python
-
+'
  ______                _____  __  __ _
 |  ____|              |  __ \|  \/  | |
 | |__   __ _ ___ _   _| |  | | \  / | |
@@ -11,7 +11,7 @@ An Easy programming tool for Distributed Machine Learning
 |______\__,_|___/\__, |_____/|_|  |_|______|
                   __/ |
                  |___/
-
+'
 ```
 ## Introduction
 This is a light python project for programming distributed machine learning algorithm easily, there are three key objects we want to achieve:
@@ -30,10 +30,9 @@ We use python to make this project can be deploy on windows, linux and mac, all 
 You can use pip to install all the packages and easily deploy this project on your cluster or PC.
 
 ## Path setting for different os
-You need to change path (both alg file and data file)  
-in run.sh && alg/*.py correspond to different os.  
+You need to change path (both alg file and data file)in run.sh && alg/*.py correspond to different os.  
 In advance, we have define several runnable pathes in code.
-* In windows, it's suggested to use spliter like "\", e.g.  
+* In windows, it's suggested to use spliter like "\\", e.g.  
 run.sh :  `mpiexec -n 5 python alg\kmeans.py`  
 kmeans.py : `gflags.DEFINE_string('dataset', '.\data\iris_norm.csv', 'the input dataset')`  
 * In Linux, it's suggested to use spliter like "/", e.g.  
@@ -43,10 +42,9 @@ kmeans.py : `gflags.DEFINE_string('dataset', '../data/iris_norm.csv', 'the input
 ## How to Run
 * First you need to set path, as states above.
 * Then you can run shell files in scipts, or use commond:  
-  mpiexec -n 5 python3 ../alg/kmeans.py
+  `mpiexec -n 5 python3 ../alg/kmeans.py`
 
 ## Programming
-* EasyDML follows Google Python style.  
-  You can see it's link in Wiki.
+* EasyDML follows Google Python style. You can see it's link in Wiki.
 * EasyDML uses MPI in distributed mangement.
-* If you want to program your distributed algorithm, inherit the class MachineLearning  there three evals in it, hence rewrite them in your algorithm, and use function run to test it.
+* If you want to program your distributed algorithm, inherit the class MachineLearning  there three evals in it, hence rewrite them in your algorithm, and use method run to test it.
