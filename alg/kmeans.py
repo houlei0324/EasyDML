@@ -17,7 +17,7 @@ gflags.DEFINE_string('dataset', '../data/iris_norm.csv', 'the input dataset')
 gflags.DEFINE_integer('k', 3, 'the number of clusters')
 gflags.DEFINE_integer('max_iteration', 100, 'the max iteration to run')
 gflags.DEFINE_float('tolerance', 0.0, 'the tolerance to stop')
-gflags.DEFINE_string('separator', ',', 'the data separator')
+gflags.DEFINE_string('separator', ' ', 'the data separator')
 
 class Kmeans(MachineLearning):
     ''' K-means Class inherit form MachineLearning
