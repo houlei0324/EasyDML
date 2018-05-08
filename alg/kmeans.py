@@ -5,14 +5,15 @@ import sys
 import numpy as np
 import gflags
 
-sys.path.insert(0, sys.path[0]+'\\..')
+#sys.path.insert(0, sys.path[0]+'\\..')
+sys.path.insert(0, sys.path[0]+'/..')
 from src.easydml import MachineLearning
 
 FLAGS = gflags.FLAGS
 
 # use gflags to set params
-gflags.DEFINE_string('dataset', '.\data\iris_norm.csv', 'the input dataset')
-#gflags.DEFINE_string('dataset', '../data/iris_norm.csv', 'the input dataset')
+#gflags.DEFINE_string('dataset', '.\data\iris_norm.csv', 'the input dataset')
+gflags.DEFINE_string('dataset', '../data/iris_norm.csv', 'the input dataset')
 gflags.DEFINE_integer('k', 3, 'the number of clusters')
 gflags.DEFINE_integer('max_iteration', 100, 'the max iteration to run')
 gflags.DEFINE_float('tolerance', 0.0, 'the tolerance to stop')
