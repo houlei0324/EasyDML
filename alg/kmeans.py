@@ -11,7 +11,6 @@ from src.easydml import MachineLearning
 
 FLAGS = gflags.FLAGS
 
-# use gflags to set params
 #gflags.DEFINE_string('dataset', '.\data\iris_norm.csv', 'the input dataset')
 gflags.DEFINE_string('dataset', '../data/iris_norm.csv', 'the input dataset')
 gflags.DEFINE_integer('k', 3, 'the number of clusters')
