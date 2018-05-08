@@ -9,27 +9,32 @@ import gflags
 sys.path.insert(0, sys.path[0]+'/..')
 from src.easydml import MachineLearning
 
-'''
-NaiveBayes algorithm is a basic clustering algorithm.
-Here we rewrite three function to achieve easy distribute programming
-'''
-
 FLAGS = gflags.FLAGS
 
-#gflags.DEFINE_string('datadir', '.\data\Chess_Data_Set(28056_6_cate)/krkopt.data', 'the input dataset')
 gflags.DEFINE_string('datadir', '../data/Chess_Data_Set(28056_6_cate)/krkopt.data', 'the input dataset')
 gflags.DEFINE_string('separator', ',', 'the data separator')
 
+# TODO(wudh): To rebuild codes to conform to our style
 class NaiveBayes(MachineLearning):
-    # the constructor of your algorithm
-    # use gflags to set params
-    # d            the dimension of data
+    ''' NavieBayes algorithm as a subcluss of ML
+
+    NavieBayes is one basic algorithm for classing, based on
+    maximum likeihood estimation. Althought it is not a iteratial
+    algorithm, it can also be easily distributed by EasyDML
+
+    '''
+
     def __init__(self):
+        ''' Inits attributes of Kmeans
+
+        The initialization defination of the ML algorithm, args all from gflags.
+        '''
         super(NaiveBayes, self).__init__()
 
-    # Coordinater
-    # Init the centers of k cluster and send them to each worker
     def initEval(self):
+        ''' Rewrite initEval for k-means
+
+        '''
         if self.comm_rank == 0:
             self.F = {}
         else:
@@ -64,6 +69,9 @@ class NaiveBayes(MachineLearning):
             self.deliverer.message_send(message, 0)
 
     def iterEval(self):
+        ''' Rewrite iterEval for k-means
+
+        '''
         if self.comm_rank == 0:
             for i in range(1, self.comm_size):
                 tmp_recv = self.deliverer.message_recv(i)
@@ -78,6 +86,7 @@ class NaiveBayes(MachineLearning):
         #========================================
         self.comm.barrier()
         self.iter_finished = self.deliverer.message_bcast(self.iter_finished)
+
     def AssumbleEval(self):
         pass
 
